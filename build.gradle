@@ -7,13 +7,33 @@ repositories {
 jar {
     manifest {
         attributes(
-                'Premain-Class': 'pl.poznan.jagent.Jagent'
+                'Premain-Class': 'pl.poznan.jagent.Jagent',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+                'Can-Set-Native-Method-Prefix': 'true',
         )
     }
 }
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Premain-Class': 'pl.poznan.jagent.Jagent',
+                'Can-Redefine-Classes': 'true',
+                'Can-Retransform-Classes': 'true',
+                'Can-Set-Native-Method-Prefix': 'true'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
+//    compile group: 'cglib', name: 'cglib', version: '3.2.4'
+    compile group: 'javassist', name: 'javassist', version: '3.12.1.GA'
+
+
     testCompile 'junit:junit:4.12'
 }
 

@@ -6,14 +6,28 @@ import java.security.ProtectionDomain;
 
 
 public class ClassTransformer implements ClassFileTransformer {
-    public byte[] transform(ClassLoader    loader,
-                            String              className,
-                            Class            classBeingRedefined,
+
+    private final MethodsChanger methodsChanger = new MethodsChanger();
+
+    public byte[] transform(ClassLoader loader,
+                            String className,
+                            Class classBeingRedefined,
                             ProtectionDomain protectionDomain,
-                            byte[]              classfileBuffer)
+                            byte[] classfileBuffer)
             throws IllegalClassFormatException {
-        System.out.println(className);
+
+        if (!isJavaOrSun(className)) {
+            try {
+                return methodsChanger.changeClass(className, classfileBuffer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return classfileBuffer;
+    }
+
+    private boolean isJavaOrSun(String className) {
+        return className.startsWith("java") || className.startsWith("sun");
     }
 
 }
