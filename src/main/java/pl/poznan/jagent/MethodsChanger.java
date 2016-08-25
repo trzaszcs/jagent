@@ -18,8 +18,15 @@ public class MethodsChanger {
         // go thru methods
         for (CtMethod method : cc.getDeclaredMethods()) {
             System.out.println("Intercepting method :" + method.getName());
-            method.insertBefore("System.out.println(\"Jagent says hello to method\");");
+            method.addLocalVariable("time", CtClass.longType);
+            method.insertBefore("time = System.currentTimeMillis();");
+            method.insertAfter(buildHookInvocation(method.getLongName()));
         }
         return cc.toBytecode();
+    }
+
+
+    private String buildHookInvocation(String methodName) {
+        return PostHook.class.getName() + ".hook(\"" + methodName + "\",$args, System.currentTimeMillis() - time);";
     }
 }
