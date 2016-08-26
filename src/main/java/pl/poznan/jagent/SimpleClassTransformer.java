@@ -5,7 +5,7 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 
-public class ClassTransformer implements ClassFileTransformer {
+public class SimpleClassTransformer implements ClassFileTransformer {
 
     private final MethodsChanger methodsChanger = new MethodsChanger();
 

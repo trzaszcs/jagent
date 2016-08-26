@@ -8,6 +8,8 @@ import javassist.CtMethod;
 
 public class MethodsChanger {
 
+    private MethodsInspector methodsInspector = new MethodsInspector();
+
     public byte[] changeClass(String className, byte[] classfileBuffer) throws Exception {
 
         String classNameWithDots = className.replaceAll("\\/", "\\.");
@@ -17,16 +19,8 @@ public class MethodsChanger {
         CtClass cc = cp.get(classNameWithDots);
         // go thru methods
         for (CtMethod method : cc.getDeclaredMethods()) {
-            System.out.println("Intercepting method :" + method.getName());
-            method.addLocalVariable("time", CtClass.longType);
-            method.insertBefore("time = System.currentTimeMillis();");
-            method.insertAfter(buildHookInvocation(method.getLongName()));
+            methodsInspector.inspect(method);
         }
         return cc.toBytecode();
-    }
-
-
-    private String buildHookInvocation(String methodName) {
-        return PostHook.class.getName() + ".hook(\"" + methodName + "\",$args, System.currentTimeMillis() - time);";
     }
 }
