@@ -1,23 +1,24 @@
-package pl.poznan.jagent;
+package pl.poznan.jagent.hook;
 
 
-public final class PostHook {
-
+public class SoutPostHook {
     public static void hook(String methodName, Object[] args, long executionTime) {
-        System.out.println("");
         System.out.println("method call stats");
         System.out.println("name: " + methodName);
         System.out.println("args: (size " + args.length + "):" + argsToString(args));
         System.out.println("executionTime: " + executionTime);
         System.out.println("threadName: " + Thread.currentThread().getName());
-        System.out.println("");
     }
 
-    private static String argsToString(Object[] args){
+    private static String argsToString(Object[] args) {
         StringBuilder sb = new StringBuilder();
-        for(Object arg: args){
+        for (Object arg : args) {
             sb.append(arg).append(",");
         }
         return sb.toString();
+    }
+
+    public static String getHookNameRef(){
+        return SoutPostHook.class.getName()+".hook";
     }
 }

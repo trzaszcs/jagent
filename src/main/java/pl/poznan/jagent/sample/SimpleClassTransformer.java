@@ -1,4 +1,4 @@
-package pl.poznan.jagent;
+package pl.poznan.jagent.sample;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;

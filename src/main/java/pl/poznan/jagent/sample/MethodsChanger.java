@@ -1,14 +1,16 @@
-package pl.poznan.jagent;
+package pl.poznan.jagent.sample;
 
 
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import pl.poznan.jagent.MethodsInspector;
+import pl.poznan.jagent.hook.SoutPostHook;
 
 public class MethodsChanger {
 
-    private MethodsInspector methodsInspector = new MethodsInspector();
+    private MethodsInspector methodsInspector = new MethodsInspector(SoutPostHook.getHookNameRef());
 
     public byte[] changeClass(String className, byte[] classfileBuffer) throws Exception {
 
