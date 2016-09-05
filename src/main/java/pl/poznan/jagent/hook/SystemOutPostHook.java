@@ -1,7 +1,7 @@
 package pl.poznan.jagent.hook;
 
 
-public class SoutPostHook {
+public class SystemOutPostHook {
     public static void hook(String methodName, Object[] args, long executionTime) {
         System.out.println("method call stats");
         System.out.println("name: " + methodName);
@@ -19,6 +19,6 @@ public class SoutPostHook {
     }
 
     public static String getHookNameRef(){
-        return SoutPostHook.class.getName()+".hook";
+        return SystemOutPostHook.class.getName()+".hook";
     }
 }

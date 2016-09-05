@@ -5,12 +5,12 @@ import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import pl.poznan.jagent.MethodsInspector;
-import pl.poznan.jagent.hook.SoutPostHook;
+import pl.poznan.jagent.MethodsWrapper;
+import pl.poznan.jagent.hook.SystemOutPostHook;
 
 public class MethodsChanger {
 
-    private MethodsInspector methodsInspector = new MethodsInspector(SoutPostHook.getHookNameRef());
+    private MethodsWrapper methodsWrapper = new MethodsWrapper(SystemOutPostHook.getHookNameRef());
 
     public byte[] changeClass(String className, byte[] classfileBuffer) throws Exception {
 
@@ -21,7 +21,7 @@ public class MethodsChanger {
         CtClass cc = cp.get(classNameWithDots);
         // go thru methods
         for (CtMethod method : cc.getDeclaredMethods()) {
-            methodsInspector.inspect(method);
+            methodsWrapper.inspect(method);
         }
         return cc.toBytecode();
     }

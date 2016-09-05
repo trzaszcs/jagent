@@ -1,21 +1,21 @@
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     jcenter()
 }
 
-jar {
-    manifest {
-        attributes(
-                'Premain-Class': 'pl.poznan.jagent.Jagent',
-                'Can-Redefine-Classes': 'true',
-                'Can-Retransform-Classes': 'true',
-                'Can-Set-Native-Method-Prefix': 'true',
-        )
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 
-task fatJar(type: Jar) {
+shadowJar {
+    configurations = [project.configurations.compile]
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Premain-Class': 'pl.poznan.jagent.Jagent',
@@ -23,17 +23,11 @@ task fatJar(type: Jar) {
                 'Can-Retransform-Classes': 'true',
                 'Can-Set-Native-Method-Prefix': 'true'
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+    relocate 'javassist', 'shadow.javassist'
 }
 
 dependencies {
     compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
-    // logging part
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
-
 
     testCompile 'junit:junit:4.12'
 }

@@ -4,10 +4,8 @@ import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import pl.poznan.jagent.MethodsInspector;
-import pl.poznan.jagent.hook.LoggerPostHook;
+import pl.poznan.jagent.MethodsWrapper;
+import pl.poznan.jagent.hook.OutputFilePostHook;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -20,8 +18,7 @@ import java.util.List;
 
 public class JdbcClassTransformer implements ClassFileTransformer {
 
-    private final MethodsInspector methodsInspector = new MethodsInspector(LoggerPostHook.getHookNameRef());
-    private static Logger logger = LoggerFactory.getLogger(JdbcClassTransformer.class);
+    private final MethodsWrapper methodsWrapper = new MethodsWrapper(OutputFilePostHook.getHookNameRef());
 
     private List<CtClass> classesIntercepted = new ArrayList<>();
 
@@ -32,6 +29,9 @@ public class JdbcClassTransformer implements ClassFileTransformer {
                             byte[] classfileBuffer)
             throws IllegalClassFormatException {
         String classNameWithDots = className.replaceAll("\\/", "\\.");
+        if (className.startsWith("javassist") || className.startsWith("shadow") || className.startsWith("java") || className.startsWith("sun")) {
+            return null;
+        }
         try {
             final ClassPool cp = ClassPool.getDefault();
             cp.insertClassPath(new ByteArrayClassPath(classNameWithDots, classfileBuffer));
@@ -48,7 +48,7 @@ public class JdbcClassTransformer implements ClassFileTransformer {
                 // inspect java.sql.Statement.execute*
                 CtClass statementClass = cp.get(Statement.class.getName());
                 if (cc.subtypeOf(statementClass)) {
-                    logger.info("inspecting class:" + cc.getName());
+                    System.out.println("inspecting class:" + cc.getName());
                     CtMethod[] methods = cc.getMethods();
                     inspectMethodsWithName("executeQuery", methods);
                     inspectMethodsWithName("execute", methods);
@@ -58,18 +58,18 @@ public class JdbcClassTransformer implements ClassFileTransformer {
                 }
             }
         } catch (Exception e) {
-            logger.debug("Problem with inspecting", e);
+            System.out.println("Problem with inspecting" + e);
         }
-        return classfileBuffer;
+        return null;
     }
 
     private void inspectMethodsWithName(String methodName, CtMethod[] methods) {
         for (CtMethod m : methods) {
             if (m.getName().equalsIgnoreCase(methodName)) {
                 try {
-                    methodsInspector.inspect(m);
+                    methodsWrapper.inspect(m);
                 } catch (Exception e) {
-                    logger.debug("Problem with inspecting method", e);
+                    System.out.println("Problem with inspecting method" + e);
                 }
             }
         }
