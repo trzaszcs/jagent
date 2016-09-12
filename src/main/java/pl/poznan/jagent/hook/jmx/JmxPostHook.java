@@ -19,4 +19,25 @@ public class JmxPostHook {
 
         Registry.JAGENT_STATS_MX_BEAN.add(new MethodCallStat(new Date(), methodName, argsStr, executionTime));
     }
+
+    public static String getHookNameRef() {
+        return JmxPostHook.class.getName() + ".hook";
+    }
+
+
+    static class A {
+        void doSmth(){
+            System.out.println("--->");
+            System.out.println("<---");
+            Thread t = Thread.currentThread();
+            System.out.println("<---");
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        new JmxPostHook.A().doSmth();
+        System.out.println("--->");
+    }
 }

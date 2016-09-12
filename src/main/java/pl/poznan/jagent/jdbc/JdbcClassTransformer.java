@@ -6,6 +6,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import pl.poznan.jagent.MethodsWrapper;
 import pl.poznan.jagent.hook.OutputFilePostHook;
+import pl.poznan.jagent.hook.jmx.JmxPostHook;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class JdbcClassTransformer implements ClassFileTransformer {
 
-    private final MethodsWrapper methodsWrapper = new MethodsWrapper(OutputFilePostHook.getHookNameRef());
+    private final MethodsWrapper methodsWrapper = new MethodsWrapper(JmxPostHook.getHookNameRef());
 
     private List<CtClass> classesIntercepted = new ArrayList<>();
 
