@@ -1,4 +1,4 @@
-package pl.poznan.jagent.hook;
+package pl.poznan.jagent.registry;
 
 
 import java.nio.file.Files;
@@ -10,15 +10,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
-public class OutputFilePostHook {
+public class FileRegistry implements StatsRegistry {
 
-    private static String outputFileName = "jagent.txt";
+    private final String outputFileName = "jagent.txt";
 
-    public static synchronized void hook(String methodName, Object[] args, long executionTime) {
+    @Override
+    public void register(String methodName, List<String> args, List<String> callStack, long executionTime) {
         try {
             List<String> lines = new ArrayList<>();
             lines.add("name: " + methodName);
-            lines.add("args: (size " + args.length + "):" + argsToString(args));
+            lines.add("args:" + argsToString(args));
             lines.add("executionTime: " + executionTime);
             lines.add("threadName: " + Thread.currentThread().getName());
             lines.add("");
@@ -28,15 +29,11 @@ public class OutputFilePostHook {
         }
     }
 
-    private static String argsToString(Object[] args) {
+    private String argsToString(List<String> args) {
         StringBuilder sb = new StringBuilder();
         for (Object arg : args) {
             sb.append(arg).append(",");
         }
         return sb.toString();
-    }
-
-    public static String getHookNameRef() {
-        return OutputFilePostHook.class.getName() + ".hook";
     }
 }

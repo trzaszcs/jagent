@@ -1,4 +1,4 @@
-package pl.poznan.jagent.hook.jmx.mbean;
+package pl.poznan.jagent.registry.jmx.mbean;
 
 
 import java.util.Date;

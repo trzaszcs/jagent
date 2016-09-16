@@ -1,0 +1,5 @@
+name: pl.poznan.biz.FakeDriver.connect(java.lang.String,java.util.Properties)
+args:addr,null,
+executionTime: 0
+threadName: main
+

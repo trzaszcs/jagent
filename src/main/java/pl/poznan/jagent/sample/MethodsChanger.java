@@ -6,11 +6,11 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import pl.poznan.jagent.MethodsWrapper;
-import pl.poznan.jagent.hook.SystemOutPostHook;
+import pl.poznan.jagent.hook.PostHook;
 
 public class MethodsChanger {
 
-    private MethodsWrapper methodsWrapper = new MethodsWrapper(SystemOutPostHook.getHookNameRef());
+    private MethodsWrapper methodsWrapper = new MethodsWrapper(PostHook.getHookNameRef());
 
     public byte[] changeClass(String className, byte[] classfileBuffer) throws Exception {
 

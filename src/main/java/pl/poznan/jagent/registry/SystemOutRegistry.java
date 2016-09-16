@@ -1,24 +1,24 @@
-package pl.poznan.jagent.hook;
+package pl.poznan.jagent.registry;
 
 
-public class SystemOutPostHook {
-    public static void hook(String methodName, Object[] args, long executionTime) {
+import java.util.List;
+
+public class SystemOutRegistry implements StatsRegistry {
+
+    @Override
+    public void register(String methodName, List<String> args, List<String> callStack, long executionTime) {
         System.out.println("method call stats");
         System.out.println("name: " + methodName);
-        System.out.println("args: (size " + args.length + "):" + argsToString(args));
+        System.out.println("args: (size " + args.size() + "):" + argsToString(args));
         System.out.println("executionTime: " + executionTime);
         System.out.println("threadName: " + Thread.currentThread().getName());
     }
 
-    private static String argsToString(Object[] args) {
+    private String argsToString(List<String> args) {
         StringBuilder sb = new StringBuilder();
         for (Object arg : args) {
             sb.append(arg).append(",");
         }
         return sb.toString();
-    }
-
-    public static String getHookNameRef(){
-        return SystemOutPostHook.class.getName()+".hook";
     }
 }
