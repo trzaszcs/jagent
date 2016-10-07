@@ -17,7 +17,7 @@ buildscript {
 shadowJar {
     configurations = [project.configurations.compile]
     manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
+        attributes 'Implementation-Title': 'Jagent-Sample',
                 'Premain-Class': 'pl.poznan.jagent.Jagent',
                 'Can-Redefine-Classes': 'true',
                 'Can-Retransform-Classes': 'true',
@@ -28,7 +28,5 @@ shadowJar {
 
 dependencies {
     compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
-
-    testCompile 'junit:junit:4.12'
 }
 

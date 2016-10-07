@@ -1,25 +1,23 @@
-package pl.poznan.jagent.registry;
+package pl.poznan.jagent.registry.socket;
 
+
+import pl.poznan.jagent.registry.StatsRegistry;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SocketRegistry implements StatsRegistry {
 
-    private final Socket socket;
-    private final PrintWriter out;
+    private final Sender sender;
 
     public SocketRegistry(String address, int port) throws IOException {
-        socket = new Socket(address, port);
-        this.out = new PrintWriter(socket.getOutputStream(), true);
+        sender = new Sender(address, port);
     }
 
     @Override
     public void register(String methodName, List<String> args, List<String> callStack, long executionTime) {
-        out.println(json(methodName, args, callStack, executionTime));
+        sender.send(json(methodName, args, callStack, executionTime));
     }
 
     private String json(String methodName, List<String> args, List<String> callStack, long executionTime) {
@@ -33,8 +31,8 @@ public class SocketRegistry implements StatsRegistry {
         return sb.toString();
     }
 
-    private String jsonList(List<String> args){
-        args = args.stream().map(s -> "\""+s+"\"").collect(Collectors.toList());
+    private String jsonList(List<String> args) {
+        args = args.stream().map(s -> "\"" + s + "\"").collect(Collectors.toList());
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         sb.append(String.join(",", args));

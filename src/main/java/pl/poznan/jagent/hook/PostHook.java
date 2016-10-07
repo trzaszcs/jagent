@@ -29,6 +29,7 @@ public class PostHook {
     }
 
     public static void setStatsRegistry(StatsRegistry statsRegistry) {
+        System.out.println("Registering PostHook: " + statsRegistry.getClass().getName());
         PostHook.statsRegistry = statsRegistry;
     }
 
