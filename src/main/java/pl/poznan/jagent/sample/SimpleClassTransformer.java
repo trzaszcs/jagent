@@ -27,7 +27,7 @@ public class SimpleClassTransformer implements ClassFileTransformer {
     }
 
     private boolean isJavaOrSun(String className) {
-        return className.startsWith("java") || className.startsWith("sun");
+        return className.startsWith("java") || className.startsWith("sun") || className.startsWith("jdk");
     }
 
 }
