@@ -12,9 +12,9 @@ import pl.poznan.jagent.registry.socket.SocketRegistry;
 import java.lang.instrument.Instrumentation;
 
 public class Jagent {
-    public static void premain(String args, Instrumentation inst) {
+    public static void premain(String args, Instrumentation inst) throws Exception {
         System.out.println("Agent started");
-        file();
+        socket();
         inst.addTransformer(new JdbcClassTransformer());
     }
 
@@ -35,7 +35,9 @@ public class Jagent {
         PostHook.setStatsRegistry(new FileRegistry());
     }
 
-    private static void socket() throws Exception {
-        PostHook.setStatsRegistry(new SocketRegistry("localhost", 9999));
+    private static SocketRegistry socket() throws Exception {
+        SocketRegistry socketRegistry = new SocketRegistry("localhost", 9999);
+        PostHook.setStatsRegistry(socketRegistry);
+        return socketRegistry;
     }
 }

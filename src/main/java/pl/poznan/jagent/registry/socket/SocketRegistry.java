@@ -12,15 +12,19 @@ import java.util.stream.Collectors;
 public class SocketRegistry implements StatsRegistry {
 
     private final Sender sender;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     public SocketRegistry(String address, int port) throws IOException {
         sender = new Sender(address, port);
     }
 
     @Override
-    public void register(String methodName, List<String> args, List<String> callStack, long durationTime, OffsetDateTime statsTime) {
+    public void register(String methodName, List<String> args, List<String> callStack, long durationTime, OffsetDateTime statsTime) throws IOException {
         sender.send(json(methodName, args, callStack, durationTime, formatter.format(statsTime)));
+    }
+
+    public void close() throws IOException {
+        sender.close();
     }
 
     private String json(String methodName, List<String> args, List<String> callStack, long durationTime, String statsTimeStr) {
@@ -30,7 +34,7 @@ public class SocketRegistry implements StatsRegistry {
         sb.append("\"durationTime\":").append(durationTime).append(",");
         sb.append("\"statsTime\":").append("\"").append(statsTimeStr).append("\"").append(",");
         sb.append("\"args\":").append(jsonList(args)).append(",");
-        sb.append("\"callStack\":").append(jsonList(callStack)).append(",");
+        sb.append("\"callStack\":").append(jsonList(callStack));
         sb.append("}");
         return sb.toString();
     }
@@ -43,4 +47,5 @@ public class SocketRegistry implements StatsRegistry {
         sb.append("]");
         return sb.toString();
     }
+
 }

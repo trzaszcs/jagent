@@ -3,7 +3,7 @@ package pl.poznan.jagent.hook;
 
 import pl.poznan.jagent.registry.StatsRegistry;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,11 @@ public class PostHook {
                         stackTraceElement.toString()
                 ).collect(Collectors.toList());
         if (statsRegistry != null) {
-            statsRegistry.register(methodName, argsStr, callStack, executionTime, OffsetDateTime.now());
+            try {
+                statsRegistry.register(methodName, argsStr, callStack, executionTime, OffsetDateTime.now());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

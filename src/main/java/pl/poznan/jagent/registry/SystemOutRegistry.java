@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SystemOutRegistry implements StatsRegistry {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @Override
     public void register(String methodName, List<String> args, List<String> callStack, long durationTime, OffsetDateTime statsBuildTime) {
